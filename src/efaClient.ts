@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { SystemMessage } from "./types/systemMessage";
+import { getErrorDetails, SystemMessage } from "./types/systemMessage";
 import { SystemInfo } from "./types/systemInfo";
 import { getSystemInfo } from "./requests/systemRequest";
 
@@ -29,15 +29,25 @@ class EfaClient {
           const systemMessages: SystemMessage[] = response.data.systemMessages;
           const errors = systemMessages.filter((msg) => msg.type === "error");
           if (errors.length > 0) {
-            const errorMessage = `Error Code ${errors[0].code}: ${errors[0].error}`;
+            const errorMessage = "";
+            errors.forEach((error) => {
+              const m = `Error Code ${error.code}: ${getErrorDetails(
+                error.code
+              )}`;
+              console.error(m);
+              errorMessage.concat(errorMessage, "\n", m);
+            });
             return Promise.reject(new Error(errorMessage));
           }
           const warnings = systemMessages.filter(
             (msg) => msg.type === "warning"
           );
           if (warnings.length > 0) {
-            const warningMessage = `Warning Code ${warnings[0].code}: ${warnings[0].text}`;
-            console.warn(warningMessage);
+            warnings.forEach((warning) => {
+              console.warn(
+                `Warning Code ${warning.code}: ${getErrorDetails(warning.code)}`
+              );
+            });
           }
         }
         return response;
