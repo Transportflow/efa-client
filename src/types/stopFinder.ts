@@ -7,7 +7,7 @@ export type StopFinderRequestParams = {
   name_sf: string;
   anyMaxSizeHitList?: number; // amount results to return
   anySigWhenPerfectNoOtherMatches?: number; // no other result for perfect matches
-  anyObjFilter_sf?: LocalityType; // anyObjFilter_sf filters results as bitmasked LocalityType
+  anyObjFilter_sf?: number; // anyObjFilter_sf filters results as bitmasked LocalityType
 };
 
 export type StopFinderLocality = Locality & {

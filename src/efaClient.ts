@@ -8,6 +8,17 @@ import {
 } from "./requests/stopFinderRequest";
 import { Locality, LocalityType } from "./types/locality";
 import { StopFinderLocality } from "./types/stopFinder";
+import { StopEvent } from "./types/stopEvent";
+import { executeDepartureMonitorRequest } from "./requests/departureMonitorRequest";
+import {
+  fptfLeg,
+  fptfLocation,
+  fptfMode,
+  fptfStation,
+  fptfStop,
+  fptfStopover,
+} from "./types/fptf";
+import { TransportationMode } from "./types/product";
 
 class EfaClient {
   private axiosInstance: AxiosInstance;
@@ -76,7 +87,7 @@ class EfaClient {
     coordinates: { lat: number; lon: number },
     customLocationName: string = "",
     maxResults: number = 10,
-    filterFor: number[] = [LocalityType.any]
+    filterFor: LocalityType[] = [LocalityType.any]
   ): Promise<StopFinderLocality[]> {
     return localitySearchForCoordinates(
       this.axiosInstance,
@@ -90,13 +101,30 @@ class EfaClient {
   public async findLocationsWithSearchQuery(
     searchQuery: string,
     maxResults: number = 10,
-    filterFor: number[] = [LocalityType.any]
+    filterFor: LocalityType[] = [LocalityType.any]
   ): Promise<StopFinderLocality[]> {
     return localitySearchForSearchQuery(
       this.axiosInstance,
       searchQuery,
       maxResults,
       filterFor
+    );
+  }
+
+  public async getStopEvents(
+    stop: string,
+    when: Date = new Date(),
+    eventType?: "departure" | "arrival",
+    maxResults?: number,
+    onlyOutputBasicInformation?: boolean
+  ): Promise<{ location: StopFinderLocality; stopEvents: StopEvent[] }[]> {
+    return await executeDepartureMonitorRequest(
+      this.axiosInstance,
+      stop,
+      when,
+      eventType,
+      maxResults,
+      onlyOutputBasicInformation
     );
   }
 }
