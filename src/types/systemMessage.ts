@@ -10,6 +10,7 @@ export interface EFAError {
   code: number;
   name: string;
   description: string;
+  nonCritical?: boolean;
 }
 
 export const getErrorDetails = (errorCode: number): EFAError => {
@@ -198,7 +199,8 @@ export const getErrorDetails = (errorCode: number): EFAError => {
     "-8011": {
       code: -8011,
       name: "ANY_LIST",
-      description: "Any-Liste verifiziert",
+      description: "Das Ergebnis ist kein einzelner Punkt sondern eine Liste.",
+      nonCritical: true,
     },
     "-8012": {
       code: -8012,

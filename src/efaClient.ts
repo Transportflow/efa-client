@@ -2,6 +2,12 @@ import axios, { AxiosInstance } from "axios";
 import { getErrorDetails, SystemMessage } from "./types/systemMessage";
 import { SystemInfo } from "./types/systemInfo";
 import { getSystemInfo } from "./requests/systemRequest";
+import {
+  localitySearchForCoordinates,
+  localitySearchForSearchQuery,
+} from "./requests/stopFinderRequest";
+import { Locality, LocalityType } from "./types/locality";
+import { StopFinderLocality } from "./types/stopFinder";
 
 class EfaClient {
   private axiosInstance: AxiosInstance;
@@ -31,13 +37,17 @@ class EfaClient {
           if (errors.length > 0) {
             const errorMessage = "";
             errors.forEach((error) => {
-              const m = `Error Code ${error.code}: ${getErrorDetails(
-                error.code
-              )}`;
+              const errorDetails = getErrorDetails(error.code);
+              const m = `Error Code ${error.code}: ${errorDetails.description}`;
               console.error(m);
-              errorMessage.concat(errorMessage, "\n", m);
+
+              if (errorDetails.nonCritical !== true) {
+                errorMessage.concat(errorMessage, "\n", m);
+              }
             });
-            return Promise.reject(new Error(errorMessage));
+            if (errorMessage.length > 0) {
+              return Promise.reject(new Error(errorMessage));
+            }
           }
           const warnings = systemMessages.filter(
             (msg) => msg.type === "warning"
@@ -62,9 +72,33 @@ class EfaClient {
     return getSystemInfo(this.axiosInstance);
   }
 
-  /*public async findStops(query: string): Promise<Station[]> {
-    return findStops(this.axiosInstance, query);
-  }*/
+  public async findLocationsWithCoordiantes(
+    coordinates: { lat: number; lon: number },
+    customLocationName: string = "",
+    maxResults: number = 10,
+    filterFor: number[] = [LocalityType.any]
+  ): Promise<StopFinderLocality[]> {
+    return localitySearchForCoordinates(
+      this.axiosInstance,
+      coordinates,
+      customLocationName,
+      maxResults,
+      filterFor
+    );
+  }
+
+  public async findLocationsWithSearchQuery(
+    searchQuery: string,
+    maxResults: number = 10,
+    filterFor: number[] = [LocalityType.any]
+  ): Promise<StopFinderLocality[]> {
+    return localitySearchForSearchQuery(
+      this.axiosInstance,
+      searchQuery,
+      maxResults,
+      filterFor
+    );
+  }
 }
 
 export default EfaClient;

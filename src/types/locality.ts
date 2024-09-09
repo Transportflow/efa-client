@@ -9,10 +9,34 @@ export enum LocalityType {
   postcode = 1 << 6,
 }
 
-export interface BaseLocality {
+// create a function on LocalityType to convert a string to a LocalityType
+export function localityTypeFromString(type: string): LocalityType {
+  switch (type) {
+    case "any":
+      return LocalityType.any;
+    case "suburb":
+      return LocalityType.suburb;
+    case "stop":
+      return LocalityType.stop;
+    case "street":
+      return LocalityType.street;
+    case "address":
+      return LocalityType.address;
+    case "intersection":
+      return LocalityType.intersection;
+    case "poi":
+      return LocalityType.poi;
+    case "postcode":
+      return LocalityType.postcode;
+    default:
+      throw new Error(`Unknown locality type: ${type}`);
+  }
+}
+
+export interface Locality {
   id: string;
   name: string;
-  disassembledName: string | null;
+  disassembledName?: string;
   coord: number[];
   type:
     | "stop"
@@ -25,22 +49,17 @@ export interface BaseLocality {
     | "intersection"
     | "singlehouse";
   // key value pairs of additional properties:
-  properties: { [key: string]: string };
-  assignedStops: StopLocality[] | null;
-}
+  properties?: { [key: string]: string };
+  assignedStops?: Locality[];
 
-export interface StopLocality extends BaseLocality {
-  distance: number | null;
-  duration: number | null;
-  connectingMode: number | null;
-  productClasses: number[] | null;
-  parent: BaseLocality | null;
-}
+  // additional properties for stops
+  distance?: number;
+  duration?: number;
+  connectingMode?: number;
+  productClasses?: number[];
+  parent?: Locality;
 
-export interface HouseLocality extends BaseLocality {
-  streetName: string | null;
-  buildingNumber: string | null;
+  // additional properties for addresses
+  streetName?: string;
+  buildingNumber?: string;
 }
-
-// combining baselocality, stoplocality and houselocality into Locality but with static type checking
-export type Locality = BaseLocality | StopLocality | HouseLocality;
