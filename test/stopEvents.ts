@@ -9,10 +9,10 @@ import { StopEvent } from "../src/types/stopEvent";
   const client = new EfaClient("https://efa.vvo-online.de/std3");
 
   try {
-    const result = await client.getStopEvents(
+    const result = await client.stopEvents(
       "33000001",
       new Date(),
-      "departure",
+      "arrival",
       5,
       true
     );

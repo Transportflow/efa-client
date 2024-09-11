@@ -1,13 +1,13 @@
 import EfaClient from "./efaClient";
 import {
-  convertLocalityToFTPF,
-  convertModeToFTPF,
-  convertStopEventToFTPF,
+  convertLocalityToFPTF,
+  convertModeToFPTF,
+  convertStopEventToFPTF,
 } from "./utils/fptfConverter";
 
 export {
   EfaClient,
-  convertLocalityToFTPF,
-  convertModeToFTPF,
-  convertStopEventToFTPF,
+  convertLocalityToFPTF as convertLocalityToFTPF,
+  convertModeToFPTF as convertModeToFTPF,
+  convertStopEventToFPTF as convertStopEventToFTPF,
 };

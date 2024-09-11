@@ -31,7 +31,7 @@ export type fptfLine = {
   name: string; // official non-abbreviated name, required
   mode: fptfMode; // see section on modes, required
   subMode?: string; // reserved for future use
-  routes: fptfRoute[]; // array of route ids or route objects
+  routes?: fptfRoute[]; // array of route ids or route objects
   operator: fptfOperator; // operator id or operator object
   properties?: { [key: string]: string };
 };
@@ -174,7 +174,7 @@ export type fptfLeg = {
 
   // - operator id or object
   // - overrides `schedule`'s `operator`
-  operator: fptfOperator;
+  operator: string | fptfOperator;
 
   // use this if pricing information is available for specific legs
   price?: fptfPrice;

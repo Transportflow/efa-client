@@ -14,7 +14,7 @@ export type Transportation = {
     name: string;
   };
   destination: Locality;
-  origin: Locality;
+  origin?: Locality;
   properties?: {
     trainType?: string;
     trainNumber?: string;

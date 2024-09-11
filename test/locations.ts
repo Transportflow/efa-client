@@ -6,7 +6,7 @@ import { LocalityType } from "../src/types/locality";
 
   try {
     const locations = await client
-      .findLocationsWithCoordiantes(
+      .locationsWithCoordiantes(
         {
           lat: 51.06316,
           lon: 13.74643,
@@ -22,7 +22,7 @@ import { LocalityType } from "../src/types/locality";
     console.dir(locations, { depth: null });
 
     const locations2 = await client
-      .findLocationsWithSearchQuery("TU Hörsaalzentrum", 5, [LocalityType.poi])
+      .locationsWithSearchQuery("TU Hörsaalzentrum", 5, [LocalityType.poi])
       .then((locations) => {
         return locations.map((location) => convertLocalityToFTPF(location));
       });

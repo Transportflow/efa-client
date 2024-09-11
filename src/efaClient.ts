@@ -19,6 +19,8 @@ import {
   fptfStopover,
 } from "./types/fptf";
 import { TransportationMode } from "./types/product";
+import { requestTrips, TripOptions } from "./requests/tripRequest";
+import { Journey } from "./types/journey";
 
 class EfaClient {
   private axiosInstance: AxiosInstance;
@@ -79,11 +81,11 @@ class EfaClient {
     );
   }
 
-  public async getSystemInfo(): Promise<SystemInfo> {
+  public async systemInfo(): Promise<SystemInfo> {
     return getSystemInfo(this.axiosInstance);
   }
 
-  public async findLocationsWithCoordiantes(
+  public async locationsWithCoordiantes(
     coordinates: { lat: number; lon: number },
     customLocationName: string = "",
     maxResults: number = 10,
@@ -98,7 +100,7 @@ class EfaClient {
     );
   }
 
-  public async findLocationsWithSearchQuery(
+  public async locationsWithSearchQuery(
     searchQuery: string,
     maxResults: number = 10,
     filterFor: LocalityType[] = [LocalityType.any]
@@ -111,7 +113,7 @@ class EfaClient {
     );
   }
 
-  public async getStopEvents(
+  public async stopEvents(
     stop: string,
     when: Date = new Date(),
     eventType?: "departure" | "arrival",
@@ -125,6 +127,21 @@ class EfaClient {
       eventType,
       maxResults,
       onlyOutputBasicInformation
+    );
+  }
+
+  public async trips(
+    origin: string | { latitude: number; longitude: number },
+    destination: string | { latitude: number; longitude: number },
+    via?: string | { latitude: number; longitude: number },
+    options?: TripOptions
+  ): Promise<Journey[]> {
+    return await requestTrips(
+      this.axiosInstance,
+      origin,
+      destination,
+      via,
+      options
     );
   }
 }
