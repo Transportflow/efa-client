@@ -10,13 +10,13 @@ import { StopEvent } from "../src/types/stopEvent";
 
   try {
     const result = await client.stopEvents(
-      "33000001",
+      "de:14612:33",
       new Date(),
-      "arrival",
-      5,
-      true
+      "departure",
+      10,
+      false
     );
-    console.log("Stop Events for stop 33000001 (Dresden Mitte):");
+    console.log("Stop Events:");
     console.dir(
       result.map((value) => {
         const fptfLegs = value.stopEvents.map((stopEvent) =>

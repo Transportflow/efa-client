@@ -48,18 +48,18 @@ class EfaClient {
           const systemMessages: SystemMessage[] = response.data.systemMessages;
           const errors = systemMessages.filter((msg) => msg.type === "error");
           if (errors.length > 0) {
-            const errorMessage = "";
+            let errorMessages: string[] = [];
             errors.forEach((error) => {
               const errorDetails = getErrorDetails(error.code);
-              const m = `Error Code ${error.code}: ${errorDetails.description}`;
+              const m = `Code ${error.code}: ${errorDetails.description}`;
               console.error(m);
 
               if (errorDetails.nonCritical !== true) {
-                errorMessage.concat(errorMessage, "\n", m);
+                errorMessages.push(m);
               }
             });
-            if (errorMessage.length > 0) {
-              return Promise.reject(new Error(errorMessage));
+            if (errorMessages.length > 0) {
+              return Promise.reject(new Error(errorMessages.join("\n")));
             }
           }
           const warnings = systemMessages.filter(
@@ -118,7 +118,7 @@ class EfaClient {
     when: Date = new Date(),
     eventType?: "departure" | "arrival",
     maxResults?: number,
-    onlyOutputBasicInformation?: boolean
+    minimal?: boolean
   ): Promise<{ location: StopFinderLocality; stopEvents: StopEvent[] }[]> {
     return await executeDepartureMonitorRequest(
       this.axiosInstance,
@@ -126,7 +126,7 @@ class EfaClient {
       when,
       eventType,
       maxResults,
-      onlyOutputBasicInformation
+      minimal
     );
   }
 

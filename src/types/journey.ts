@@ -12,6 +12,7 @@ export type Journey = {
 
 export type Leg = {
   duration: number;
+  isCancelled?: boolean;
   distance?: number;
   isRealtimeControlled?: boolean;
   realtimeStatus?: string[];
@@ -27,6 +28,7 @@ export type Leg = {
   };
   transportation: Transportation;
   stopSequence?: (Locality & {
+    isCancelled?: boolean;
     arrivalTimePlanned?: string;
     arrivalTimeEstimated?: string;
     departureTimePlanned?: string;

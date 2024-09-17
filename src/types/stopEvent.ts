@@ -3,6 +3,7 @@ import { StopFinderLocality } from "./stopFinder";
 import { Transportation } from "./transportation";
 
 export type StopEvent = {
+  isCancelled?: boolean;
   realtimeStatus?: string[];
   isRealtimeControlled?: boolean;
   location: StopFinderLocality & {

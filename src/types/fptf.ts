@@ -70,6 +70,8 @@ export type fptfOperator = {
 export type fptfStopover = {
   type: "stopover";
 
+  cancelled: boolean; // required
+
   // - stop/station id or object
   // - required
   stop: string | fptfStation | fptfStop;
@@ -111,6 +113,8 @@ export type fptfJourney = {
 export type fptfLeg = {
   type: "leg"; // required
   id: string; // unique, optional
+
+  cancelled: boolean; // required
 
   // - station/stop/location id or object
   // - required

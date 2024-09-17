@@ -113,6 +113,7 @@ export function convertStopEventToFPTF(
   return {
     type: "leg",
     id: stopEvent.transportation?.id,
+    cancelled: stopEvent.isCancelled || false,
     origin:
       stopEvent.transportation?.origin &&
       convertLocalityToFPTF(stopEvent.transportation?.origin, minimal)[0],
@@ -157,6 +158,22 @@ export function convertStopEventToFPTF(
       mode: convertModeToFPTF(stopEvent.transportation.product.class),
       subMode: stopEvent.transportation.product.name,
     },
+    ...((stopEvent.infos || stopEvent.hints) && {
+      remarks: [
+        ...(stopEvent.infos || [])
+          .flatMap((i) => i.infoLinks)
+          .map((info) => ({
+            type: "info",
+            title: info.title,
+            subtitle: info.subtitle,
+            content: info.content,
+          })),
+        ...(stopEvent.hints || []).map((hint) => ({
+          type: "hint",
+          content: hint.content,
+        })),
+      ],
+    }),
     properties: {
       ...stopEvent.transportation?.properties,
       ...stopEvent.location.properties,
@@ -194,6 +211,7 @@ export function convertLegToFPTF(leg: Leg): fptfLeg {
   return {
     type: "leg",
     id: leg.transportation && leg.transportation.id,
+    cancelled: leg.isCancelled || false,
     origin: leg.origin && convertLocalityToFPTF(leg.origin, true)[0],
     destination:
       leg.destination && convertLocalityToFPTF(leg.destination, true)[0],
@@ -219,6 +237,7 @@ export function convertLegToFPTF(leg: Leg): fptfLeg {
       (stop) =>
         ({
           type: "stopover",
+          cancelled: stop.isCancelled || false,
           stop: convertLocalityToFPTF(stop, true)[0],
           arrival: stop.arrivalTimeEstimated || stop.arrivalTimePlanned,
           plannedArrival: stop.arrivalTimePlanned,
