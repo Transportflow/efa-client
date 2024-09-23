@@ -25,8 +25,8 @@ export type ICSInfo = {
     subtitle: string;
     content: string;
     additionalText: string;
-    urlText: string;
-    url: string;
-    htmlText: string;
+    urlText?: string;
+    url?: string;
+    htmlText?: string;
   }[];
 };

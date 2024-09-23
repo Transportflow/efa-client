@@ -17,19 +17,7 @@ import { StopEvent } from "../src/types/stopEvent";
       false
     );
     console.log("Stop Events:");
-    console.dir(
-      result.map((value) => {
-        const fptfLegs = value.stopEvents.map((stopEvent) =>
-          convertStopEventToFTPF(stopEvent)
-        );
-
-        return {
-          location: convertLocalityToFTPF(value.location),
-          stopEvents: fptfLegs,
-        };
-      }),
-      { depth: null }
-    );
+    console.dir(result, { depth: null });
   } catch (error) {
     console.error(error);
   }

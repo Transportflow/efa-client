@@ -9,14 +9,10 @@ async function executeStopFinderRequest(
   axiosInstance: AxiosInstance,
   params: StopFinderRequestParams
 ): Promise<StopFinderLocality[]> {
-  try {
-    const request = await axiosInstance.get(`/XML_STOPFINDER_REQUEST`, {
-      params: params,
-    });
-    return request.data["locations"];
-  } catch (error) {
-    throw new Error(`GET stopfinder request failed: ${error}`);
-  }
+  const request = await axiosInstance.get(`/XML_STOPFINDER_REQUEST`, {
+    params: params,
+  });
+  return request.data["locations"];
 }
 
 const getBitmaskedLocalityType = (
@@ -86,6 +82,7 @@ export async function localitySearchForSearchQuery(
     type_sf: "any",
     name_sf: searchQuery,
     anyObjFilter_sf: filter,
+    anyMaxSizeHitList: maxResults,
   };
 
   return await executeStopFinderRequest(axiosInstance, params).then((res) => {

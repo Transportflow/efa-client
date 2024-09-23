@@ -200,7 +200,6 @@ export const getErrorDetails = (errorCode: number): EFAError => {
       code: -8011,
       name: "ANY_LIST",
       description: "Das Ergebnis ist kein einzelner Punkt sondern eine Liste.",
-      nonCritical: true,
     },
     "-8012": {
       code: -8012,

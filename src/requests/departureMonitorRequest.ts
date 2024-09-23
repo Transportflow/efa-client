@@ -33,6 +33,10 @@ export async function executeDepartureMonitorRequest(
   let entries: { location: StopFinderLocality; stopEvents: StopEvent[] }[] = [];
   // for each location in the response create a new object with the location and the stopEvents for this location
   response.data.locations.forEach((location: StopFinderLocality) => {
+    if (!response.data.stopEvents) {
+      return;
+    }
+
     let stopEvents = response.data.stopEvents.filter((stopEvent: StopEvent) => {
       if (stopEvent.location.parent) {
         return stopEvent.location.parent.id === location.id;
@@ -92,6 +96,16 @@ export async function executeDepartureMonitorRequest(
         delete stopEvent.hints;
       });
     }
+
+    stopEvents.forEach((stopEvent: StopEvent) => {
+      stopEvent.infos?.forEach((info) => {
+        info.infoLinks.forEach((infoLink) => {
+          delete infoLink.urlText;
+          delete infoLink.url;
+          delete infoLink.htmlText;
+        });
+      });
+    });
 
     entries.push({
       location,

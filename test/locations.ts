@@ -22,7 +22,7 @@ import { LocalityType } from "../src/types/locality";
     console.dir(locations, { depth: null });
 
     const locations2 = await client
-      .locationsWithSearchQuery("Webergasse", 5, [LocalityType.stop])
+      .locationsWithSearchQuery("Berlin", 5)
       .then((locations) => {
         return locations.map((location) => convertLocalityToFTPF(location));
       });

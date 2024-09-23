@@ -44,6 +44,23 @@ class EfaClient {
     // Interceptor for handling system messages
     this.axiosInstance.interceptors.response.use(
       (response) => {
+        let responseContainsOnlySystemMessages = true;
+        // Check if response contains only system messages and version information
+        // Also check if there are any keys that point to empty arrays or objects
+        for (const key in response.data) {
+          if (key !== "version" && key !== "systemMessages") {
+            if (
+              (Array.isArray(response.data[key]) &&
+                response.data[key].length > 0) ||
+              (typeof response.data[key] === "object" &&
+                Object.keys(response.data[key]).length > 0)
+            ) {
+              responseContainsOnlySystemMessages = false;
+              break;
+            }
+          }
+        }
+
         if (response.data.systemMessages) {
           const systemMessages: SystemMessage[] = response.data.systemMessages;
           const errors = systemMessages.filter((msg) => msg.type === "error");
@@ -58,7 +75,10 @@ class EfaClient {
                 errorMessages.push(m);
               }
             });
-            if (errorMessages.length > 0) {
+            if (
+              errorMessages.length > 0 &&
+              responseContainsOnlySystemMessages
+            ) {
               return Promise.reject(new Error(errorMessages.join("\n")));
             }
           }

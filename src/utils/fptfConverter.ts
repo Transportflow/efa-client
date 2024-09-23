@@ -21,9 +21,11 @@ export function convertLocalityToFPTF(
   let additionalAssignedStops: (fptfLocation | fptfStation | fptfStop)[] = [];
   if (location.assignedStops) {
     // INFO: we are assuming that there are no assignedStops inside assignedStops
-    additionalAssignedStops = location.assignedStops.map((stop) => {
-      return convertLocalityToFPTF(stop)[0];
-    });
+    additionalAssignedStops = location.assignedStops
+      .filter((s) => s.id != location.id)
+      .map((stop) => {
+        return convertLocalityToFPTF(stop)[0];
+      });
   }
 
   if (location.type == LocalityType.platform) {
@@ -66,7 +68,7 @@ export function convertLocalityToFPTF(
       {
         type: "station",
         id: location.id,
-        name: location.name,
+        name: location.disassembledName || location.name,
         location: location.coord && {
           type: "location",
           id: location.parent?.id || location.id,
@@ -84,7 +86,7 @@ export function convertLocalityToFPTF(
     {
       type: "location",
       id: location.id,
-      name: location.name,
+      name: location.disassembledName || location.name,
       address: location.disassembledName,
       latitude: location.coord && location.coord[0],
       longitude: location.coord && location.coord[1],
@@ -189,7 +191,9 @@ export function convertJourneyToFPTF(
     type: "journey",
     id: id,
     legs: journey.legs.map((leg) => convertLegToFPTF(leg)),
-    price: convertFareToFPTF(journey.fare),
+    ...(journey.fare.tickets.length > 0 && {
+      price: convertFareToFPTF(journey.fare),
+    }),
   };
 }
 

@@ -183,6 +183,9 @@ export type fptfLeg = {
   // use this if pricing information is available for specific legs
   price?: fptfPrice;
   properties?: { [key: string]: string };
+
+  remarks?: any[];
+  polyline?: number[][];
 };
 
 export type fptfPrice = {
